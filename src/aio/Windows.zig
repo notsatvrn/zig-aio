@@ -360,8 +360,8 @@ fn completion(self: *@This(), id: u16, uop: *Operation.Union, failure: Operation
             .accept => |*op| {
                 if (op.out_addr) |a| @memcpy(std.mem.asBytes(a), op._[@sizeOf(std.posix.sockaddr) + 16 .. @sizeOf(std.posix.sockaddr) * 2 + 16]);
             },
-            inline .read, .recv => |*op| op.out_read.* = self.ovls[id].res,
-            inline .write, .send => |*op| {
+            inline .read, .recv, .recv_msg => |*op| op.out_read.* = self.ovls[id].res,
+            inline .write, .send, .send_msg => |*op| {
                 if (op.out_written) |w| w.* = self.ovls[id].res;
             },
             else => {},
